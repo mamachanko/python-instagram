@@ -1,28 +1,28 @@
 python-instagram
-======
+================
 A Python client for the Instagram REST and Search APIs
 
 Installation
------
+------------
 pip install python-instagram
 
 Requires
------
+--------
   * httplib2
   * simplejson
 
 
 Discussion
-------
+----------
 
 Visit [our Google Group](http://groups.google.com/group/instagram-api-developers) to discuss the Instagram API.
 
 
 Authentication
------
+--------------
 
 Instagram API uses the OAuth2 protocol for authentication, but not all functionality requires authentication.
-See the docs for more information: http://instagr.am/developer/auth/
+See the [docs](http://instagram.com/developer/authentication/) for more information on authentication.
 
 ### Obtaining an access token
 
@@ -35,42 +35,48 @@ The provided sample app shows a simple OAuth flow for authenticating a user and 
 
 ### Using an access token
 
-Once you have an access token (whether via the script or from the user flow), you can  pass that token into the InstagramAPI constructor:
+Once you have an access token (whether via the script or from the user flow), you can pass that token into the InstagramAPI constructor:
 
-    from instagram.client import InstagramAPI
+```python
+from instagram.client import InstagramAPI
 
-    access_token = "YOUR_ACCESS_TOKEN"
-    api = InstagramAPI(access_token=access_token)
-    recent_media, next = instagram_client.user_recent_media(user_id=user.instagram_userid, count=count)
-    for media in recent_media:
-       print media.caption.text
+access_token = "YOUR_ACCESS_TOKEN"
+api = InstagramAPI(access_token=access_token)
+recent_media, next = instagram_client.user_recent_media(user_id=user.instagram_userid, count=count)
+for media in recent_media:
+   print media.caption.text
+```
        
 ### Making unauthenticated requests
 
 For methods that don't require authentication, you can just pass your client ID and optionally client secret into the InstagramAPI 
 constructor:
 
-    api = InstagramAPI(client_id='YOUR_CLIENT_ID', client_secret='YOUR_CLIENT_SECRET')
-    popular_media = api.media_popular(count=20)
-    for media in popular_media:
-        print media.images['standard_resolution'].url
+```python
+api = InstagramAPI(client_id='YOUR_CLIENT_ID',
+                   client_secret='YOUR_CLIENT_SECRET')
+popular_media = api.media_popular(count=20)
+for media in popular_media:
+    print media.images['standard_resolution'].url
+```
 
-
-Real-time Subscriptions:
------
+Real-time Subscriptions
+-----------------------
 
 See the docs for more on real-time subscriptions: http://instagr.am/developer/realtime/
 
 You can use the API to subscribe to users, tags, locations, or geographies:
 
-    # Subscribe to updates for all users authenticated to your app
-    api.create_subscription(object='user', aspect='media', callback_url='http://mydomain.com/hook/instagram')
-    # Subscribe to all media tagged with 'fox'
-    api.create_subscription(object='tag', object_id='fox', aspect='media', callback_url='http://mydomain.com/hook/instagram')
-    # Subscribe to all media in a given location
-    api.create_subscription(object='location', object_id='1257285', aspect='media', callback_url='http://mydomain.com/hook/instagram')
-    # Subscribe to all media in a geographic area
-    api.create_subscription(object='geography', lat=35.657872, lng=139.70232, radius=1000, aspect='media', callback_url='http://mydomain.com/hook/instagram')
+```python
+# Subscribe to updates for all users authenticated to your app
+api.create_subscription(object='user', aspect='media', callback_url='http://mydomain.com/hook/instagram')
+# Subscribe to all media tagged with 'fox'
+api.create_subscription(object='tag', object_id='fox', aspect='media', callback_url='http://mydomain.com/hook/instagram')
+# Subscribe to all media in a given location
+api.create_subscription(object='location', object_id='1257285', aspect='media', callback_url='http://mydomain.com/hook/instagram')
+# Subscribe to all media in a geographic area
+api.create_subscription(object='geography', lat=35.657872, lng=139.70232, radius=1000, aspect='media', callback_url='http://mydomain.com/hook/instagram')
+```
  
 Along with that, you would typically register subscription "reactors" for processing the different subscription types:
 
